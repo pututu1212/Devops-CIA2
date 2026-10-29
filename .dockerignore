@@ -1,0 +1,5 @@
+﻿.git
+.github
+.vscode
+target/*
+!target/devops-cia2-1.0.0.jar
