@@ -1,0 +1,13 @@
+﻿---
+- name: Deploy DevOps CIA 2 application to Kubernetes
+  hosts: local
+  gather_facts: false
+  tasks:
+    - name: Apply application namespace, deployment, and service
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ item }}"
+      loop:
+        - ../k8s/namespace.yaml
+        - ../k8s/deployment.yaml
+        - ../k8s/service.yaml
