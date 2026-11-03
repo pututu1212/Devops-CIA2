@@ -15,7 +15,7 @@ public class Application {
     static class StatusController {
         @GetMapping("/")
         public String home() {
-            return "Hello, Siddhanth!";
+            return "Hello, Siddhanth! Version 2";
         }
 
         @GetMapping("/health")
