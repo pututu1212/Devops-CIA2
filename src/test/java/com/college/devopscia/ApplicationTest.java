@@ -20,7 +20,7 @@ class ApplicationTest {
     void homeEndpointReturnsGreeting() {
         String response = restTemplate.getForObject(
             "http://localhost:" + port + "/", String.class);
-        assertEquals("Hello, Siddhanth!", response);
+        assertEquals("Hello, Siddhanth! Version 2", response);
     }
 
     @Test
