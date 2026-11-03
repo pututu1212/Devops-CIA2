@@ -4,7 +4,7 @@ metadata:
   name: devops-cia2
   namespace: devops-cia2
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: devops-cia2
