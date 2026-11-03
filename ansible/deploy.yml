@@ -1,13 +1,51 @@
-﻿---
+---
 - name: Deploy DevOps CIA 2 application to Kubernetes
   hosts: local
   gather_facts: false
+
   tasks:
-    - name: Apply application namespace, deployment, and service
-      kubernetes.core.k8s:
-        state: present
-        src: "{{ item }}"
-      loop:
-        - ../k8s/namespace.yaml
-        - ../k8s/deployment.yaml
-        - ../k8s/service.yaml
+    - name: Create application namespace
+      ansible.builtin.command:
+        argv:
+          - kubectl
+          - apply
+          - -f
+          - "{{ playbook_dir }}/../k8s/namespace.yaml"
+
+    - name: Apply application deployment
+      ansible.builtin.command:
+        argv:
+          - kubectl
+          - apply
+          - -f
+          - "{{ playbook_dir }}/../k8s/deployment.yaml"
+
+    - name: Apply application service
+      ansible.builtin.command:
+        argv:
+          - kubectl
+          - apply
+          - -f
+          - "{{ playbook_dir }}/../k8s/service.yaml"
+
+    - name: Update deployment to the current commit image
+      ansible.builtin.command:
+        argv:
+          - kubectl
+          - set
+          - image
+          - deployment/devops-cia2
+          - "devops-cia2=ghcr.io/pututu1212/devops-cia2:{{ image_tag }}"
+          - -n
+          - devops-cia2
+
+    - name: Wait for deployment rollout
+      ansible.builtin.command:
+        argv:
+          - kubectl
+          - rollout
+          - status
+          - deployment/devops-cia2
+          - -n
+          - devops-cia2
+          - --timeout=180s

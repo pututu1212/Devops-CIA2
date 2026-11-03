@@ -1,4 +1,3 @@
-﻿
 name: Java CI/CD Pipeline
 
 on:
@@ -11,7 +10,7 @@ permissions:
   packages: write
 
 jobs:
-  build-test-publish:
+  build-test-publish-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -51,3 +50,34 @@ jobs:
           tags: |
             ghcr.io/pututu1212/devops-cia2:latest
             ghcr.io/pututu1212/devops-cia2:${{ github.sha }}
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+
+      - name: Configure Kubernetes credentials
+        env:
+          KUBE_CONFIG_B64: ${{ secrets.KUBE_CONFIG }}
+        run: |
+          mkdir -p "$HOME/.kube"
+          echo "$KUBE_CONFIG_B64" | base64 --decode > "$HOME/.kube/config"
+          chmod 600 "$HOME/.kube/config"
+
+      - name: Deploy using Ansible
+        run: |
+          ansible-playbook -i ansible/inventory.ini ansible/deploy.yml \
+            --extra-vars "image_tag=${GITHUB_SHA}"
+
+      - name: Verify deployment
+        run: |
+          kubectl get pods -n devops-cia2
+          kubectl get services -n devops-cia2
