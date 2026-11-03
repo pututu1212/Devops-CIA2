@@ -5,6 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -16,10 +17,10 @@ class ApplicationTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    void homeEndpointReturnsExpectedMessage() {
+    void homeEndpointReturnsGreeting() {
         String response = restTemplate.getForObject(
             "http://localhost:" + port + "/", String.class);
-        assertEquals("DevOps CIA 2 - CI/CD Pipeline is running!", response);
+        assertEquals("Hello, Siddhanth!", response);
     }
 
     @Test

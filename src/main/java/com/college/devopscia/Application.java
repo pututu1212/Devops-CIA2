@@ -15,7 +15,7 @@ public class Application {
     static class StatusController {
         @GetMapping("/")
         public String home() {
-            return "DevOps CIA 2 - CI/CD Pipeline is running!";
+            return "Hello, Siddhanth!";
         }
 
         @GetMapping("/health")
